@@ -1,0 +1,86 @@
+---
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+```
+
+## Column {data-width="650"}
+
+### Chart A
+
+```{r}
+mtcars$am[which(mtcars$am == 0)] <- 'Automatic'
+mtcars$am[which(mtcars$am == 1)] <- 'Manual'
+mtcars$am <- as.factor(mtcars$am)
+
+fig <- plot_ly(mtcars, x = ~wt, y = ~hp, z = ~qsec, color = ~am, colors = c('#BF382A', '#0C4B8E'))
+fig <- fig %>% add_markers()
+fig <- fig %>% layout(scene = list(xaxis = list(title = 'Weight'),
+                     yaxis = list(title = 'Gross horsepower'),
+                     zaxis = list(title = '1/4 mile time')))
+
+fig
+```
+
+## Column {data-width="350"}
+
+### Chart B
+
+```{r}
+library(plotly)
+
+# custom grid style
+axx <- list(
+  gridcolor='rgb(255, 255, 255)',
+  zerolinecolor='rgb(255, 255, 255)',
+  showbackground=TRUE,
+  backgroundcolor='rgb(230, 230,230)'
+)
+
+# individual plots
+fig1 <- plot_ly(z = ~volcano, scene='scene1') 
+fig1 <- fig1 %>% add_surface(showscale=FALSE)
+
+fig2 <- plot_ly(z = ~volcano, scene='scene2') 
+fig2 <- fig2 %>% add_surface(showscale=FALSE)
+
+fig3 <- plot_ly(z = ~volcano, scene='scene3') 
+fig3 <- fig3 %>% add_surface(showscale=FALSE)
+
+fig4 <- plot_ly(z = ~volcano, scene='scene4') 
+fig4 <- fig4 %>% add_surface(showscale=FALSE)
+
+# subplot and define scene
+fig <- subplot(fig1, fig2, fig3, fig4) 
+fig <- fig %>% layout(title = "3D Subplots",
+         scene = list(domain=list(x=c(0,0.5),y=c(0.5,1)),
+                      xaxis=axx, yaxis=axx, zaxis=axx,
+
+                      # select the type of aspectmode
+                      aspectmode='cube'),
+         scene2 = list(domain=list(x=c(0.5,1),y=c(0.5,1)),
+                       xaxis=axx, yaxis=axx, zaxis=axx,
+                       aspectmode='data'),
+         scene3 = list(domain=list(x=c(0,0.5),y=c(0,0.5)),
+                       xaxis=axx, yaxis=axx, zaxis=axx,
+                       aspectmode='auto'),
+         scene4 = list(domain=list(x=c(0.5,1),y=c(0,0.5)),
+                       xaxis=axx, yaxis=axx, zaxis=axx,
+                       aspectmode='manual',
+
+                       # set your manual fixed aspect ratio
+                       aspectratio = list(x=1, y=1, z=2)))
+
+fig
+```
+
+### Chart C
+
+```{r}
+
+```
